@@ -1,0 +1,69 @@
+<html>
+<style>
+#canvas{
+  float: left;
+  width: 50%;
+}
+#canvas1 {
+  float: left ;
+  width: 50% ;
+}
+</style>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="PhyloCanvas-withouthistory.js"></script> 
+
+<script type="text/javascript">
+var tree1, tree2;
+var phylocanvas1, phylocanvas2;
+
+function func(t1){
+	app.printString("BBB99 " + t1.length);
+	var str = '';
+	var k = 1;
+	for(var i=0; i<t1.length; i++) {
+		if(t1[i] == '#') {
+			app.printString("YO");
+			if(k != 1) {
+				var div = document.createElement('div');
+				div.id = 'canvas' + k;
+				document.getElementById('canvas').appendChild(div);
+				document.getElementById('canvas'+k).style["float"] = "left";
+				document.getElementById('canvas'+k).style["width"] = "50%";
+			}
+			phylocanvas = new PhyloCanvas.Tree('canvas' + k, {
+					contextMenu : [{
+    					text: '',
+    					handler: ''
+  					}]
+			});
+    		phylocanvas.setTreeType('rectangular');
+			phylocanvas.showBootstrap = true;
+			phylocanvas.load(str);
+			if(k == 1)
+				phylocanvas.setSize(350,600);
+			else
+				phylocanvas.setSize(250,250);
+				
+			k++;
+			str = '';
+			continue;
+		}
+		str = str + t1[i];
+	}
+}
+
+</script>
+</head>
+<body onLoad="load()">
+Species Tree &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	Gene Trees
+<div id="container">
+	<div id="canvas1"></div>
+  	<div id="canvas"> </div>
+</div>
+</body>
+</html>

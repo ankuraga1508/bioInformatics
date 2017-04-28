@@ -1,0 +1,284 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<style>
+#canvas_menu1 {
+  float: left ;
+  width: 50% ;
+}
+#canvas_menu2 {
+  float: left;
+  width: 50%;
+}
+#canvas1 {
+  float: left ;
+  width: 50% ;
+}
+#canvas2 {
+  float: left;
+  width: 50%;
+}
+.third-level-menu
+{
+    position: absolute;
+    top: 0;
+    right: -100px;
+    width: 100px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    z-index: 10;
+}
+
+.third-level-menu > li
+{
+    height: 30px;
+    background: #999999;
+}
+.third-level-menu > li:hover { background: #CCCCCC; }
+
+.second-level-menu
+{
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 150px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    z-index: 10;
+}
+
+.second-level-menu > li
+{
+    position: relative;
+    height: 30px;
+    background: #999999;
+    z-index: 10;
+}
+.second-level-menu > li:hover { background: #CCCCCC; }
+
+.top-level-menu
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.top-level-menu > li
+{
+    position: relative;
+    float: left;
+    height: 30px;
+    width: 80px;
+    background: #999999;
+    z-index: 10;
+}
+.top-level-menu > li:hover { background: #CCCCCC; }
+
+.top-level-menu li:hover > ul
+{
+    /* On hover, display the next level's menu */
+    display: inline;
+}
+
+
+/* Menu Link Styles */
+
+.top-level-menu a /* Apply to all links inside the multi-level menu */
+{
+    font: bold 14px Arial, Helvetica, sans-serif;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 0 0 0 10px;
+
+    /* Make the link cover the entire list item-container */
+    display: block;
+    line-height: 30px;
+}
+.top-level-menu button {
+    background-color: #999999;
+    color: FFFFFF;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+.top-level-menu a:hover { color: #000000; }
+</style>
+
+
+<script type="text/javascript" src="resources/PhyloCanvas.js"></script> 
+<script type="text/javascript" src="resources/html2canvas.js"></script> 
+<script type="text/javascript" src="resources/jquery-3.1.1.min.js"></script> 
+
+<script type="text/javascript">
+var tree1, tree2;
+var phylocanvas1, phylocanvas2;
+
+function compare(t1, t2){
+	app.printString("BBB99");
+	tree1 = t1;
+	tree2 = t2;
+
+	phylocanvas1 = new PhyloCanvas.Tree('canvas1')
+	phylocanvas1.setTreeType('rectangular');
+	phylocanvas1.load(tree1);
+	phylocanvas1.setSize(350,600);
+	
+	phylocanvas2 = new PhyloCanvas.Tree('canvas2')
+	phylocanvas2.setTreeType('rectangular');
+	phylocanvas2.load(tree2);
+	phylocanvas2.setSize(350,600);
+}
+
+function rotate1(event) {
+  var id = document.getElementById("rotatebox1").value;
+  phylocanvas1.branches['pcn' + id].rotate(event);
+  phylocanvas1.draw();
+}
+
+function rotate2(event) {
+  var id = document.getElementById("rotatebox2").value;
+  phylocanvas2.branches['pcn' + id].rotate(event);
+  phylocanvas2.draw();
+}
+
+var search1 = function(ele) {
+    if(ele.value !== "")
+      phylocanvas1.findBranch(ele.value);
+    else {
+      phylocanvas1.root.setSelected(false, true);
+      phylocanvas1.draw();
+    }
+}
+
+var search2 = function(ele) {
+    if(ele.value !== "")
+      phylocanvas2.findBranch(ele.value);
+    else {
+      phylocanvas2.root.setSelected(false, true);
+      phylocanvas2.draw();
+    }
+}
+
+function multipleTrees1() {
+	app.callMultipleTreeView(tree1);
+}
+function multipleTrees2() {
+	app.callMultipleTreeView(tree2);
+}
+
+function save1() {
+	html2canvas($('#canvas1'), {
+		background : '#FFFFFF',
+		onrendered: function (canvas) {
+			var image = canvas.toDataURL("image/png");
+			app.save(image);
+		}
+	});
+}
+function save2() {
+	html2canvas($('#canvas2'), {
+		background : '#FFFFFF',
+		onrendered: function (canvas) {
+			var image = canvas.toDataURL("image/png");
+			app.save(image);
+		}
+	});
+}
+
+</script>
+</head>
+<body onLoad="load()">
+
+<div id="container">
+  <div id="canvas_menu1">
+  
+  <ul class="top-level-menu">
+<input type="text" id="rotatebox1" size="10"><button onClick="rotate1(event);">Rotate</button>
+Search<input type="text" id="searchbox1" size="10" onkeyup="search1(this);">
+    <li>
+        <a href="#">Options</a>
+        <ul class="second-level-menu">
+        	<li>
+                <a href="#">View</a>
+                <ul class="third-level-menu">
+                    <li><a onclick="phylocanvas1.setTreeType('rectangular');">Rectangular</a></li>
+                    <li><a onclick="phylocanvas1.setTreeType('circular');">Circular</a></li>
+                    <li><a onclick="phylocanvas1.setTreeType('radial');">Radial</a></li>
+                    <li><a onclick="phylocanvas1.setTreeType('diagonal');">Diagonal</a></li>
+                    <li><a onclick="phylocanvas1.setTreeType('hierarchy');">Hierarchical</a></li>
+                </ul>
+            </li>
+            
+        	<li><a onclick="multipleTrees1();">Complete tree view</a></li>
+            <li><a onclick="save1();">Save Tree</a></li>
+        </ul>
+    </li>
+</ul>
+
+</div>
+  
+	<div id="canvas_menu2">
+
+	  <ul class="top-level-menu">
+<input type="text" id="rotatebox2" size="10"><button onClick="rotate2(event);">Rotate</button>
+Search<input type="text" id="searchbox2" size="10" onkeyup="search2(this);">
+    <li>
+        <a href="#">Options</a>
+        <ul class="second-level-menu">
+        	<li>
+                <a href="#">View</a>
+                <ul class="third-level-menu">
+                    <li><a onclick="phylocanvas2.setTreeType('rectangular');">Rectangular</a></li>
+                    <li><a onclick="phylocanvas2.setTreeType('circular');">Circular</a></li>
+                    <li><a onclick="phylocanvas2.setTreeType('radial');">Radial</a></li>
+                    <li><a onclick="phylocanvas2.setTreeType('diagonal');">Diagonal</a></li>
+                    <li><a onclick="phylocanvas2.setTreeType('hierarchy');">Hierarchical</a></li>
+                </ul>
+            </li>
+            
+        	<li><a onclick="multipleTrees2();">Complete tree view</a></li>
+            <li><a onclick="save2();">Save Tree</a></li>
+        </ul>
+    </li>
+</ul>
+	
+  </div>
+  <div id="canvas1"> </div>
+  <div id="canvas2"></div>
+</div>
+
+<!-- <select onchange="viewChange(this.value)" class="simpledropdown">
+<option value="rectangular">Rectangular</option>
+<option value="Circular">Circular</option>
+</select> -->
+
+</body>
+
+
+
+<!--
+function injectHTML(){
+	app.printString("CCC");
+	var iframe = document.getElementById('test_iframe');
+	var html_string = "&lt;html&gt;&#10;&lt;head&gt;&#10;&lt;meta http-equiv=&#34;Content-Type&#34; content=&#34;text/html; charset=utf-8&#34; /&gt;&#10;&lt;script type=&#34;text/javascript&#34; src=&#34;PhyloCanvas.js&#34;&gt;&lt;/script&gt; &#10;&lt;script type=&#34;text/javascript&#34;&gt;&#10;var tree;&#10;var phylocanvas;&#10;function load(){&#10;&#9;app.printString(&#34;AAA111&#34;);&#10;&#9;var newick_str = &#34;(A:0.1,B:0.2,(C:0.3,D:0.4)E:0.5)F;&#34;;&#10;&#9;phylocanvas = new PhyloCanvas.Tree('canvas')&#10;&#9;phylocanvas.setTreeType('rectangular');&#10;&#9;phylocanvas.load(newick_str);&#10;&#9;phylocanvas.setSize(800,500);&#10;}&#10;&lt;/script&gt;&#10;&lt;/head&gt;&#10;&lt;body onLoad=&#34;load()&#34;&gt;&#10;&lt;div id=&#34;canvas&#34;&gt; &lt;/div&gt;&#10;&lt;/body&gt;&#10;&lt;/html&gt;";
+	var iframedoc = iframe.document;
+		if (iframe.contentDocument)
+			iframedoc = iframe.contentDocument;
+		else if (iframe.contentWindow)
+			iframedoc = iframe.contentWindow.document;
+
+	 if (iframedoc){
+		 iframedoc.open();
+		 iframedoc.writeln(html_string);
+		 iframedoc.close();
+	 }
+
+}
+-->
+</html>
