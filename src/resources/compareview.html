@@ -120,16 +120,27 @@ var tree1, tree2;
 var phylocanvas1, phylocanvas2;
 
 function compare(t1, t2){
-	app.printString("BBB99");
 	tree1 = t1;
 	tree2 = t2;
 
-	phylocanvas1 = new PhyloCanvas.Tree('canvas1')
+	phylocanvas1 = new PhyloCanvas.Tree('canvas1', {
+		contextMenu : [{
+    		text: '',
+    		handler: ''
+  		}]
+	});
+	
+	phylocanvas2 = new PhyloCanvas.Tree('canvas2', {
+		contextMenu : [{
+    		text: '',
+    		handler: ''
+  		}]
+	});
+	
 	phylocanvas1.setTreeType('rectangular');
 	phylocanvas1.load(tree1);
 	phylocanvas1.setSize(350,600);
 	
-	phylocanvas2 = new PhyloCanvas.Tree('canvas2')
 	phylocanvas2.setTreeType('rectangular');
 	phylocanvas2.load(tree2);
 	phylocanvas2.setSize(350,600);
@@ -264,7 +275,6 @@ Search<input type="text" id="searchbox2" size="10" onkeyup="search2(this);">
 
 <!--
 function injectHTML(){
-	app.printString("CCC");
 	var iframe = document.getElementById('test_iframe');
 	var html_string = "&lt;html&gt;&#10;&lt;head&gt;&#10;&lt;meta http-equiv=&#34;Content-Type&#34; content=&#34;text/html; charset=utf-8&#34; /&gt;&#10;&lt;script type=&#34;text/javascript&#34; src=&#34;PhyloCanvas.js&#34;&gt;&lt;/script&gt; &#10;&lt;script type=&#34;text/javascript&#34;&gt;&#10;var tree;&#10;var phylocanvas;&#10;function load(){&#10;&#9;app.printString(&#34;AAA111&#34;);&#10;&#9;var newick_str = &#34;(A:0.1,B:0.2,(C:0.3,D:0.4)E:0.5)F;&#34;;&#10;&#9;phylocanvas = new PhyloCanvas.Tree('canvas')&#10;&#9;phylocanvas.setTreeType('rectangular');&#10;&#9;phylocanvas.load(newick_str);&#10;&#9;phylocanvas.setSize(800,500);&#10;}&#10;&lt;/script&gt;&#10;&lt;/head&gt;&#10;&lt;body onLoad=&#34;load()&#34;&gt;&#10;&lt;div id=&#34;canvas&#34;&gt; &lt;/div&gt;&#10;&lt;/body&gt;&#10;&lt;/html&gt;";
 	var iframedoc = iframe.document;

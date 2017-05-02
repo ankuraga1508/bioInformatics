@@ -1,4 +1,0 @@
-#NEXUS
-BEGIN TREES;
-TREE species = (prot:1,(fung:1,((arth:1,(anne:1,((echi:1,(chon:1,((amph:1,(moll:1,(((aves:1,rept:1):1,mamm:1):1,agna:1):1):1):1,oste:1):1):1):1,acoe:1):1):1):1,(chlo:1,embr:1):1):1):1);
-END;

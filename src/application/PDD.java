@@ -22,12 +22,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -38,6 +40,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tabdetachable.TabPaneDetacher;
 
+@SuppressWarnings("restriction")
 public class PDD extends GUI{
 	File outputFile;
 	String consoleOutput = "", numberOfTrees = "";
@@ -180,7 +183,7 @@ public class PDD extends GUI{
 						ArrayList<Input> geneTrees = GUI.speciesTree.get(firstTree);
 							try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
 								for(int i=0; i<geneTrees.size(); i++){
-									bw.write(geneTrees.get(i).getTree()); 
+									bw.write(geneTrees.get(i).getTree()+"\n"); 
 								}
 							} catch (IOException ex) {
 								ex.printStackTrace();
@@ -250,6 +253,8 @@ public class PDD extends GUI{
             BufferedReader stdError = new BufferedReader(new 
             	     InputStreamReader(proc.getErrorStream()));
 
+            String errorMsg = "";
+        	boolean error = false;
         	String s = null;
         	while ((s = stdInput.readLine()) != null) {
         		System.out.println(s);
@@ -259,19 +264,30 @@ public class PDD extends GUI{
         			tree = stdInput.readLine().replaceAll(" ","");
         			consoleOutput = consoleOutput + tree + "\n";
         		}
-//        		if(s.equals("Begin trees;")) {
-//        			while(!(s = stdInput.readLine()).contains("End;")) {
-//        				tree = tree + s.replaceAll("tree PDD_Median_Tree_(\\d+) = ", "") + "";
-//        				consoleOutput = consoleOutput + s + "\n";
-//        			}
-//        		}
+        		
         		if(s.contains("Final tree PD distance is "))
         			bestScore= (int) Float.parseFloat(s.replaceAll("Final tree PD distance is ", ""));
+        		
+        		if(s.contains("Error message")) {
+        			errorMsg = errorMsg + s;
+        			error = true;
+        		}
         	}
 
+        	
         	while ((s = stdError.readLine()) != null) {
+        		errorMsg = errorMsg + s;
         		System.out.println(s);
         		textArea.appendText(s);
+        		error = true;
+        	}
+        	
+        	if(error) {
+        		Alert alert = new Alert(AlertType.ERROR);
+    			alert.setTitle("Error Dialog");
+    			alert.setHeaderText("Error Dialog");
+    			alert.setContentText("\n" + errorMsg);
+    			alert.showAndWait();
         	}
         	
         	setConsoleOutput(consoleOutput);
@@ -279,9 +295,7 @@ public class PDD extends GUI{
             ex.printStackTrace();
             textArea.appendText(ex.toString());
         }
-    	
-    	//tree = "(((('Puffinus griseus',(('Pterodroma baraui',((('Diomedea amsterdamensis','Diomedea epomophora'),(('Puffinus nativitatis','Phoebastria albatrus'),'Phoebastria immutabilis')),((('Phoebetria palpebrata','Puffinus gravis'),'Phoebetria fusca'),('Thalassarche chrysostoma',('Pterodroma nigripennis','Thalassarche bulleri'))))),(((('Fulmarus glacialis','Puffinus huttoni'),(('Puffinus auricularis','Macronectes giganteus'),'Puffinus lherminieri')),('Fulmarus glacialoides',((('Puffinus puffinus',('Puffinus mauretanicus','Puffinus yelkouan')),(('Puffinus assimilis','Pagodroma nivea'),'Puffinus gavia')),'Calonectris diomedea'))),((((('Pseudobulweria aterrima','Pseudobulweria rostrata'),'Puffinus pacificus'),'Puffinus tenuirostris'),('Procellaria cinerea','Bulweria bulwerii')),('Puffinus creatopus','Puffinus carneipes'))))),('Pelecanoides urinatrix','Puffinus bulleri')),('Oceanodroma leucorhoa','Diomedea exulans')),('Hydrobates pelagicus','Oceanodroma castro'));";
-    	//tree = tree.replaceAll("'","");
+
     	showOutput.add(new Output(convertToNewickWIthDistance(tree), bestScore));
     	return showOutput;
     }
@@ -293,34 +307,6 @@ public class PDD extends GUI{
         );
     }
 	
-//	public ArrayList<String> openInputFile(String filename) {
-//		ArrayList<String> output = new ArrayList<String>();
-//		BufferedReader br = null;
-//		try {
-//			br = new BufferedReader(new FileReader(filename));
-//		    StringBuilder sb = new StringBuilder();
-//		    String line = br.readLine();
-//	
-//		    while (line != null) {
-//		    	if(line.contains("begin trees;")) {
-//		    		while(!(line = br.readLine()).contains("end;")) {
-//		    			output.add(line.replaceAll("'", "").replaceAll(" ","").replaceAll("treeseabirds_(\\d+)=", ""));
-//        			}
-//		    	}
-//		    	line = br.readLine();
-//		    }
-//		} catch(Exception e){
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				br.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return output;
-//	}
-	
 	protected void setConsoleOutput(String consoleOutput) {
 		this.consoleOutput = consoleOutput;
 	}
@@ -328,14 +314,6 @@ public class PDD extends GUI{
 	protected String getConsoleOutput() {
 		return this.consoleOutput;
 	}
-	
-//	public String getInputFilename() {
-//		if(this.inputFile != null){
-//			String[] farr = this.inputFile.toString().split("/");
-//			return farr[farr.length-1];
-//		} else
-//			return "";		
-//	}	
 
 	private void setNumberOfTrees(String numberOfTrees) {
 		this.numberOfTrees = numberOfTrees;

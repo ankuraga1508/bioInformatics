@@ -25,32 +25,24 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import jebl.evolution.treemetrics.RobinsonsFouldMetric;
 import tabdetachable.TabPaneDetacher;
-import data.Output;
 
+@SuppressWarnings("restriction")
 public class SupertreeComparison extends GUI {
 	ObservableList<String> dynamicSupertreeOpt = FXCollections.observableArrayList();
 	private String supertreeName, method;
 	
 	public void askParameters(String st){
-		ArrayList<Input> geneTrees = GUI.speciesTree.get(st);
 	    for (Entry<String, ArrayList<Input>> entry : GUI.speciesTree.entrySet()) {
-	    	//ArrayList<Input> list = entry.getValue();
-	    	//if (isEqual(list, geneTrees)) {
-	    		dynamicSupertreeOpt.add(getSuperTree(entry.getKey()));
-	    		System.out.println(getSuperTree(entry.getKey()));
-	        //}
+	    	dynamicSupertreeOpt.add(getSuperTree(entry.getKey()));
 	    }
 	    Collections.sort(dynamicSupertreeOpt);
 	    
@@ -123,7 +115,6 @@ public class SupertreeComparison extends GUI {
 					
 					Tab tab = new Tab();
 					tab.setText("Comparison");
-					//tab.setContent(new CostView(st+"#"+GUI.speciesTreeName.get(getCompareSuperTree())+"%", compareScore, "robinson-foulds"));
 					
 					final VBox vBox = new VBox(5);
 					WebView webView = new CompareView().webView(st, GUI.speciesTreeName.get(getCompareSuperTree()));				
@@ -138,6 +129,7 @@ public class SupertreeComparison extends GUI {
 				} catch(Exception ex) {
 					subStage.close();
 					
+					ex.printStackTrace();
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Error Dialog");
 					alert.setHeaderText("Look, an Error Dialog");
@@ -159,7 +151,6 @@ public class SupertreeComparison extends GUI {
 	public void askParametersForUploadedTree(String firstTree, String secondTree){
 	    for (Entry<String, ArrayList<Input>> entry : GUI.speciesTree.entrySet()) {
 	    	dynamicSupertreeOpt.add(getSuperTree(entry.getKey()));
-	    	System.out.println(getSuperTree(entry.getKey()));
 	    }
 	    Collections.sort(dynamicSupertreeOpt);
 	    
@@ -261,14 +252,15 @@ public class SupertreeComparison extends GUI {
 
 		Scene scene = new Scene(grid, 400, 300);
 		subStage.setScene(scene);
-		subStage.show();	
+		subStage.show();
 	}
 	
 	private void runTriplet(){
 		Process proc = null;
 		try {
-			File tempFile = new File(System.getProperty("java.io.tmpdir") + "temp.nwk");
 			tempCopyToLocalDisk("tripletsat.jar");
+			tempCopyToLocalDisk("biojava.jar");
+			tempCopyToLocalDisk("jgrapht-jdk1.5.jar");
 			
 			proc = Runtime.getRuntime().exec("java -jar " + System.getProperty("java.io.tmpdir") +
 					"/tripletsat.jar " + System.getProperty("java.io.tmpdir") + "/input1.nex " + 
@@ -335,22 +327,6 @@ public class SupertreeComparison extends GUI {
 	        }
 	    }
 		return "";
-	}
-
-	private boolean isEqual(ArrayList<Input> list, ArrayList<Input> geneTrees) {
-		int count = 0;
-		for(int i=0; i<geneTrees.size(); i++){
-			for(int j=0; j<list.size(); j++){
-				if(geneTrees.get(i).getTree().equals(list.get(j).getTree())) {
-					count++;
-				}
-			}
-		}
-		System.out.println(" RESULT " + count  + " " +   geneTrees.size() + " " + list.size());
-		if(count == geneTrees.size() && geneTrees.size() == list.size())
-			return true;
-		else
-			return false;
 	}
 	
 	public String uploadSupertree(String file){

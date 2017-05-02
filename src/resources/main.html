@@ -100,7 +100,6 @@
 var tree, phylocanvas;
 
 function load(){
-	app.printString("AAA");
 }
 
 function save() {
@@ -124,12 +123,9 @@ function func(t){
 	});
     
 	phylocanvas.setTreeType('rectangular');
-	phylocanvas.showBootstrap = true;
+	//phylocanvas.showBootstrap = true;
 	phylocanvas.load(tree);
 	phylocanvas.setSize(800,500);
-	
-	phylocanvas.alignLabels = true; // false to reset
-	phylocanvas.draw();
 }
 
 var count = 0;
@@ -137,7 +133,6 @@ function recursion(node) {
     for (var i = 0; i < node.children.length; i++) {
         var text = '';
         text += node.children[i].id;
-         app.printString(node.children[i].id);
         if((node.children[i].id).search('pcn') != -1) {
         	node.children[i].id = count;
         	node.children[i].label = count;
@@ -174,7 +169,6 @@ function multipleTrees() {
 }
 
 function print(){
-	app.printString("GGGGG");
 }
 </script>
 </head>

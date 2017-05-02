@@ -18,12 +18,10 @@ var tree1, tree2;
 var phylocanvas1, phylocanvas2;
 
 function func(t1){
-	app.printString("BBB99 " + t1.length);
 	var str = '';
 	var k = 1;
 	for(var i=0; i<t1.length; i++) {
 		if(t1[i] == '#') {
-			app.printString("YO");
 			if(k != 1) {
 				var div = document.createElement('div');
 				div.id = 'canvas' + k;

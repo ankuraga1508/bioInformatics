@@ -1,50 +1,26 @@
 package application;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
-
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
-import javax.swing.Timer;
-import javax.swing.border.Border;
-
-import org.apache.commons.io.FileUtils;
-
-import compareDistance.GTPCosts;
-import compareDistance.PhylogeneticTree;
-import compareDistance.TreeUtils;
-
-//import Trees.Tree;
-//import Trees.TreeException;
-import data.Output;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -61,11 +37,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -78,9 +51,12 @@ import jebl.evolution.io.ImportException;
 import jebl.evolution.io.NewickImporter;
 import jebl.evolution.treemetrics.RobinsonsFouldMetric;
 import jebl.evolution.trees.Tree;
-import scm.SCMUI;
 import tabdetachable.TabPaneDetacher;
+import org.apache.commons.io.FileUtils;
+import compareDistance.TreeUtils;
+import data.Output;
 
+@SuppressWarnings("restriction")
 public class GUI {
     static String tree;
 	String generator, compareGeneTree;
@@ -431,17 +407,15 @@ public class GUI {
 					 else {
 						File tempFile = new File(System.getProperty("java.io.tmpdir") + "temp.nwk");
 						ArrayList<Input> geneTrees = GUI.speciesTree.get(firstTree);
-						for(int i=0; i<geneTrees.size(); i++) {
-							System.out.println(" HH " + geneTrees.get(i).getTree());
-						}
-							try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
-								for(int i=0; i<geneTrees.size(); i++){
-									bw.write(geneTrees.get(i).getTree()); 
-								}
-							} catch (IOException ex) {
-								textArea.setText(ex.toString());
-								ex.printStackTrace();
-							}					
+						
+						try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
+							for(int i=0; i<geneTrees.size(); i++){
+								bw.write(geneTrees.get(i).getTree()+"\n"); 
+							}
+						} catch (IOException ex) {
+							textArea.setText(ex.toString());
+							ex.printStackTrace();
+						}					
 						
 						showOutput = runRFS(tempFile);
 						if(compareFile != null)
@@ -528,7 +502,6 @@ public class GUI {
 			else
 				result.add(new Result(resultId, "name" + i, numberOfTaxa(showOutput.get(i).getTree()), "rooted", showOutput.get(i).getTree(), 
 						getFilename() + "_species_" + getPrevInputId() + "-" + (getPrevInputId()+getNumberOfInput()-1), algo, showOutput.get(i).getBestScore(),"Input "+fileInput)); 
-		System.out.println("median tree taxa " + numberOfTaxa(showOutput.get(i).getTree()));
 		}
 	}
 	
@@ -547,13 +520,6 @@ public class GUI {
 		}
 	}
 	
-//	public void addResultItem(String tree, String algo){
-//		final ComboBox comboBox = new ComboBox(options);
-//		comboBox.setValue("Tree");
-//		resultId += 1;
-//		result.add(new Result(resultId, "name", "0", "rooted", comboBox, tree, getFilename() + "_" + (getPrevInputId()+1), algo, showOutput.get(i).getBestScore()));
-//	}
-	
 	public void configureFileChooser(final FileChooser fileChooser){                           
         fileChooser.setTitle("Select Newick File");
         fileChooser.setInitialDirectory(
@@ -569,22 +535,23 @@ public class GUI {
     	try {
     		
     		Process proc = null;
-    		ProcessBuilder pb = null; 
-			tempCopyToLocalDisk("RFS.exe");
+    		ProcessBuilder pb = null;
 			
-    		if(System.getProperty("os.name").contains("Linux"))
-    			proc = Runtime.getRuntime().exec("executables/RFS.linux "
-    					+ "-i " + file 
-    					+ " -g " + getGenerator()
-    					+ " --seed " + getSeed());
-    		else if(System.getProperty("os.name").contains("Windows"))
+    		if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+    			tempCopyToLocalDisk("RFS.linux");
+    			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "RFS.linux"
+    					,"-i",""+file,"-g",getGenerator(),"--seed",getSeed());
+    		}
+    		else if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+    			tempCopyToLocalDisk("RFS.exe");
     			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "RFS.exe"
     					,"-i",""+file,"-g",getGenerator(),"--seed",getSeed());
-    		else if(System.getProperty("os.name").toLowerCase().contains("mac"))
-    			proc = Runtime.getRuntime().exec("executables/RFS.macintel "
-    					+ "-i " + file 
-    					+ " -g " + getGenerator()
-    					+ " --seed " + getSeed());
+    		}
+    		else if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+    			tempCopyToLocalDisk("RFS.macintel");
+    			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "RFS.macintel"
+    					,"-i",""+file,"-g",getGenerator(),"--seed",getSeed());
+    		}
             
     		proc = pb.start();
     		
@@ -639,6 +606,7 @@ public class GUI {
     public void tempCopyToLocalDisk(String string) {
     	URL inputUrl = getClass().getResource("/executables/" + string);
     	File dest = new File(System.getProperty("java.io.tmpdir") + string);
+    	
     	try {
     		if(!dest.exists())
     			FileUtils.copyURLToFile(inputUrl, dest);
@@ -686,8 +654,9 @@ public class GUI {
 
     	    while (line != null) {
     	    	if(line.contains(";")) {
-    	    		String arr[] = line.split(";");
+    	    		String arr[] = line.replaceAll(" ", "").split(";");
     	    		for(int i=0; i<arr.length; i++) {
+    	    			System.out.println( " ff " + arr[i]);
     	    			output.add(convertToNewickWIthDistance(arr[i]+";"));
     	    		}
     	    	}
@@ -861,56 +830,3 @@ public class GUI {
 		return farr[farr.length-1];
 	}
 }
-
-//File file;
-//InputStream in;
-//BufferedWriter bw = null;
-//FileWriter fw = null;
-//BufferedReader reader = null;
-//try {
-//	in = getClass().getResourceAsStream("/executables/" + string); 
-//	reader = new BufferedReader(new InputStreamReader(in));
-//	
-//	fw = new FileWriter(System.getProperty("java.io.tmpdir") + string);
-//	bw = new BufferedWriter(fw);
-//	
-//	String line;
-//	while ((line = reader.readLine()) != null) {
-//		bw.write(line);
-//	}
-//} catch (Exception e1) {
-//	e1.printStackTrace();
-//	textArea.appendText(e1.toString());
-//}
-//finally {
-//
-//	try {
-//
-//		if (reader != null)
-//			reader.close();
-//
-//		if (fw != null)
-//			fw.close();
-//
-//	} catch (IOException ex) {
-//		textArea.appendText(ex.toString());
-//		ex.printStackTrace();
-//
-//	}
-//
-//}
-
-
-
-
-
-
-//URL path = this.getClass().getClassLoader().getResource("executables/");
-//File source = new File(path.getFile());
-//File dest = new File(System.getProperty("java.io.tmpdir"));
-//try {
-//    FileUtils.copyDirectory(source, dest);
-//} catch (IOException e) {
-//	textArea.appendText(e.toString());
-//    e.printStackTrace();
-//}

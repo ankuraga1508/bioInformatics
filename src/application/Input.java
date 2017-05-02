@@ -1,10 +1,9 @@
 package application;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.ComboBox;
 
+@SuppressWarnings("restriction")
 public class Input {   
     //Properties
 	private SimpleIntegerProperty number = new SimpleIntegerProperty();

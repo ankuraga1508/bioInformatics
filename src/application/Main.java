@@ -1,34 +1,17 @@
 package application;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.script.ScriptException;
-
-import org.apache.commons.codec.binary.Base64;
-
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -43,10 +26,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tabdetachable.TabPaneDetacher;
  
+@SuppressWarnings("restriction")
 public class Main extends Application {
     
     static ObservableList<String> filter = FXCollections.observableArrayList();
@@ -60,39 +43,6 @@ public class Main extends Application {
         BorderPane border = new BorderPane();
         VBox vbox = gui.addVBox(stage);
         border.setLeft(vbox);
-        
-        String s = null;
-
-        try {
-            
-	    // run the Unix "ps -ef" command
-            // using the Runtime exec method:
-            Process p = Runtime.getRuntime().exec("java -version");
-            
-            BufferedReader stdInput = new BufferedReader(new 
-                 InputStreamReader(p.getInputStream()));
-
-            BufferedReader stdError = new BufferedReader(new 
-                 InputStreamReader(p.getErrorStream()));
-
-            // read the output from the command
-            System.out.println("Here is the standard output of the command:\n");
-            while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
-            }
-            
-            // read any errors from the attempted command
-            System.out.println("Here is the standard error of the command (if any):\n");
-            while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
-            }
-        }
-        catch (IOException e) {
-            System.out.println("exception happened - here's what I know: ");
-            e.printStackTrace();
-            System.exit(-1);
-        }
-        
         
         final GridPane inputGridPane = new GridPane();
         inputGridPane.setHgap(6);
@@ -138,7 +88,6 @@ public class Main extends Application {
                     Tab tab = new Tab();
     				tab.setText("Median tree " + rowData.getNumber());
     				String tree = rowData.getTree();
-    				System.out.println("RRRRR " + tree);
     				
     				final VBox vBox = new VBox(5);
 					WebView webView = new BrowserView().webView(tree, null);
@@ -307,22 +256,6 @@ public class Main extends Application {
     	
     	Tab tab = new Tab();
     	tab.setText("Homepage");
-    	
-    	String tree = "((hedgehog:1.0,shrew:1.0):1.0,(((microbat:1.0,macrobat:1.0):1.0,((((cow:1.0,sheep:1.0):1.0,dolphin:1.0):1.0,pig:1.0):1.0,vicugna:1.0):1.0):1.0,(horse:1.0,(dog:1.0,cat:1.0):1.0):1.0):1.0);";
-		
-		StringBuilder strBuilder = new StringBuilder(tree.replaceAll(" ", ""));
-		if(!strBuilder.toString().contains(":"))
-			for(int i=0; i<strBuilder.length(); i++) {
-				if(strBuilder.substring(i, i+1).equals(",") || strBuilder.substring(i, i+1).equals(")")) {
-					strBuilder = strBuilder.insert(i, ":1");
-					i = i+2;
-				} else if(strBuilder.substring(i, i+1).equals(";") && !strBuilder.substring(i-1, i).equals(")") && !strBuilder.substring(i-1, i).equals("1")){
-					strBuilder = strBuilder.insert(i, ":1");
-					i = i+2;
-				}
-			}
-		
-		tree = strBuilder.toString();
 		
 		final VBox vBox = new VBox(5);
 		WebView webView = new WelcomePage().webView();
@@ -338,7 +271,7 @@ public class Main extends Application {
 			    new ChangeListener<Tab>() {
 			        @Override
 			        public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
-			            System.out.println("Tab Selection changed ");
+			            
 			        }
 			    }
 			);
@@ -353,47 +286,8 @@ public class Main extends Application {
         stage.setMaximized(true);
         stage.show();
     }
-    
-    private int numberOfTaxa(String tree) {
-    	int charCount = 0;
-    	char temp;
-
-    	for( int i = 0; i < tree.length( ); i++ ) {
-    	    temp = tree.charAt( i );
-    	    if(temp == ',')
-    	        charCount++;
-    	}
-		return charCount;
-	}
-
-	private ArrayList<String> openInputPDDFile(String filename) {
-    	ArrayList<String> trees = new ArrayList<String>();
-    	BufferedReader br = null;
-    	try {
-    		br = new BufferedReader(new FileReader(filename));
-    	    String line = br.readLine();	    
-    	    while (line != null) {
-    	    	if(line.equals("Begin trees;")) {
-        			while(!(line = br.readLine()).contains("End;")) {
-        				trees.add(line.replaceAll("tree PDD_Median_Tree_(\\d+) = ", "").replaceAll("'",""));
-        			}
-        		}     
-    	        line = br.readLine();
-    	    }
-    	} catch(Exception e){
-    		e.printStackTrace();
-    	} finally {
-    	    try {
-				br.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-    	}
-    	return trees;
-	}
 
 	public static void main(String[] args) {
-		//LauncherImpl.launchApplication(Main.class, Loader.class, args);
         Application.launch(args);
     }
 }

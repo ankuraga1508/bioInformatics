@@ -46,6 +46,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tabdetachable.TabPaneDetacher;
 
+@SuppressWarnings("restriction")
 public class DeepCoalescence extends GUI{
 	File constraintFile;
 	String consoleOutput, generator, maxTrees, heuristic, fileOutput;
@@ -355,13 +356,15 @@ public class DeepCoalescence extends GUI{
 						ArrayList<Input> geneTrees = GUI.speciesTree.get(firstTree);
 							try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
 								for(int i=0; i<geneTrees.size(); i++){
-									bw.write(geneTrees.get(i).getTree()); 
+									bw.write(geneTrees.get(i).getTree()+"\n");
 								}
 							} catch (IOException ex) {
 								textArea.setText(ex.toString());
 								ex.printStackTrace();
 							}
+							System.out.println(" SS " + tempFile);
 						showOutput = runDeepCoalescene(tempFile);
+						System.out.println(" DD " + showOutput.get(0));
 						if(compareFile != null)
 							addResultItems(showOutput, "DC", compareFile);
 						else
@@ -417,51 +420,86 @@ public class DeepCoalescence extends GUI{
 
     	try {
     		Process proc = null;
-    		ProcessBuilder pb = null; 
-			tempCopyToLocalDisk("deepCWin.exe");
+    		ProcessBuilder pb = null;
 			
-    		if(System.getProperty("os.name").contains("Linux"))
-    			proc = Runtime.getRuntime().exec("executables/deepCLin "
-    					+ "-i " + file
-    					+ " -g " + getGeneratorNumber(getGenerator())
-    					+ getCommand(getConstraintFile().toString(), " --constraints ")
-    					+ " --heuristic " + getHeuristicNumber(getHeuristic()) 
-    					//+ " --trees " + format(getMaxTrees())
-    					+ " --seed " + getSeed());
-    		else if(System.getProperty("os.name").contains("Windows") && this.constraintFile != null)
-    			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "deepCWin.exe"
-    					,"-i",
-    					file.toString(),
-    					"-g",
-    					getGeneratorNumber(getGenerator()),
-    					"--constraints",
-    					getConstraintFile().toString(),
-    					"--heuristic",
-    					getHeuristicNumber(getHeuristic()),    					
-    					//"--trees",
-    					//format(getMaxTrees()),
-    					"--seed",
-    					getSeed());
-    		else if(System.getProperty("os.name").contains("Windows") && this.constraintFile == null)
-    			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "deepCWin.exe"
-    					,"-i",
-    					file.toString(),
-    					"-g",
-    					getGeneratorNumber(getGenerator()),
-    					"--heuristic",
-    					getHeuristicNumber(getHeuristic()),    					
-    					//"--trees",
-    					//format(getMaxTrees()),
-    					"--seed",
-    					getSeed());
-    		else if(System.getProperty("os.name").toLowerCase().contains("mac"))
-    			proc = Runtime.getRuntime().exec("executables/deepCMac "
-    					+ "-i " + file
-    					+ " -g " + getGeneratorNumber(getGenerator())
-    					+ getCommand(getConstraintFile().toString(), " --constraints ")
-    					+ " --heuristic " + getHeuristicNumber(getHeuristic()) 
-    					//+ " --trees " + format(getMaxTrees())
-    					+ " --seed " + getSeed());
+    		if(this.constraintFile != null) {
+    			if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+        			tempCopyToLocalDisk("deepCWin.exe");
+        			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "deepCWin.exe"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--constraints",
+        					getConstraintFile().toString(),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+        		} else if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+        			tempCopyToLocalDisk("deepCLin");
+        			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "deepCLin"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--constraints",
+        					getConstraintFile().toString(),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+        		} else if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+        			tempCopyToLocalDisk("deepCMac");
+        			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "deepCMac"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--constraints",
+        					getConstraintFile().toString(),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+        		}
+    		} else {
+    			if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+    				tempCopyToLocalDisk("deepCWin.exe");
+    				pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "deepCWin.exe"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+    			} else if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+    				tempCopyToLocalDisk("deepCLin");
+    				pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "deepCLin"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+    			} else if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+    				tempCopyToLocalDisk("deepCMac");
+    				pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "deepCMac"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+    			}
+        		
+    		}
     		
     		proc = pb.start();
     		
@@ -494,6 +532,7 @@ public class DeepCoalescence extends GUI{
         	setConsoleOutput(consoleOutput);
         	setFileOutput(fileOutput);
         } catch (Exception ex) {
+        	System.out.println(ex);
             ex.printStackTrace();
             textArea.appendText(ex.toString());
         }
@@ -591,14 +630,5 @@ public class DeepCoalescence extends GUI{
 		else
 			return "1";
 	}
-	
-	private String format(String str) {
-		if(str == null || str == "")
-			return "1";
-		
-		if(str.equals("All"))
-			return "all";
-		else
-			return "1";
-	}
+
 }

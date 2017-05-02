@@ -1,17 +1,31 @@
-command: C:\Users\ankur\AppData\Local\Temp\duptree2.exe -i C:\Users\ankur\Desktop\genie\input\gene.nwk --seed 10
-input file: C:\Users\ankur\Desktop\genie\input\gene.nwk
+command: C:\Users\ankuraga\AppData\Local\Temp\duptree2.exe -i C:\oldwindows\desktop\creativeComponent\igtp\iGTP1.1\inputData\vertebrates01.newick --seed 10
+input file: C:\oldwindows\desktop\creativeComponent\igtp\iGTP1.1\inputData\vertebrates01.newick
 seed: 10
-reading gene trees: 1..10..12
-gene trees: 12
+reading gene trees: 1..9
+gene trees: 9
 gene trees rooted binary: pass
-gene tree nodes: 94 (53 taxa)
-taxa: 11
-gene tree linkage: pass
-building starting tree: 0%..10%..20%..30%..40%..50%..60%..70%..80%..100%
+gene tree nodes: 489 (249 taxa)
+taxa: 73
+gene tree linkage: fail
+pass
+building starting tree: 0%..10%..20%..30%..40%..50%..60%..70%..80%..90%..100%
 
-elapsed time in building starting tree: species tree nodes: 21 (11 taxa)
-starting duplications: 3
-SPR analyzed: 20
-SPR applied: 0
-elapsed time in optimization search: final duplications: 3
+elapsed time in building starting tree: species tree nodes: 145 (73 taxa)
+starting duplications: 101
+duplications: 100
+duplications: 99
+duplications: 98
+duplications: 97
+duplications: 96
+duplications: 93
+duplications: 92
+duplications: 91
+duplications: 90
+duplications: 89
+duplications: 88
+duplications: 87
+duplications: 86
+SPR analyzed: 359
+SPR applied: 13
+elapsed time in optimization search: final duplications: 86
 total elapsed time: 

@@ -43,6 +43,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tabdetachable.TabPaneDetacher;
 
+@SuppressWarnings("restriction")
 public class DupTree extends GUI{
 	String consoleOutput;
 	Tab tab = new Tab();
@@ -269,7 +270,7 @@ public class DupTree extends GUI{
 						ArrayList<Input> geneTrees = GUI.speciesTree.get(firstTree);
 							try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
 								for(int i=0; i<geneTrees.size(); i++){
-									bw.write(geneTrees.get(i).getTree()); 
+									bw.write(geneTrees.get(i).getTree()+"\n"); 
 								}
 							} catch (IOException ex) {
 								ex.printStackTrace();
@@ -287,10 +288,6 @@ public class DupTree extends GUI{
 					
 					tab.setText("Median tree " + (resultId));
 					tree = showOutput.get(0).getTree();
-//					if(!flag)
-//						tab.setContent(new BrowserView(tree, numberOfTaxa(tree), file));
-//					else
-//						tab.setContent(new CompareView(firstTree, tree));
 					
 					final VBox vBox = new VBox(5);
 					WebView webView = null;
@@ -333,19 +330,25 @@ public class DupTree extends GUI{
     	
     	try {
     		Process proc = null;
-    		ProcessBuilder pb = null; 
-    		tempCopyToLocalDisk("duptree2.exe");
+    		ProcessBuilder pb = null;
     		
-    		if(System.getProperty("os.name").contains("Linux"))
-    			proc = Runtime.getRuntime().exec(System.getProperty("user.dir")+"/executables/duptree2.linux64 -i " + file
-    					+ " --seed " + getSeed());
-    		else if(System.getProperty("os.name").contains("Windows"))
+    		if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+    			tempCopyToLocalDisk("duptree2.linux64");
+    			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "duptree2.linux64"
+    					,"-i",""+file,"--seed",getSeed());
+    		}
+    		else if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+    			tempCopyToLocalDisk("duptree2.exe");
     			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "duptree2.exe"
     					,"-i",""+file,"--seed",getSeed());
-    		else if(System.getProperty("os.name").toLowerCase().contains("mac"))
-    			proc = Runtime.getRuntime().exec(System.getProperty("user.dir")+"/executables/duptree2.macosx -i " + file
-    					+ " --seed " + getSeed());
-            
+    		}
+
+    		else if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+    			tempCopyToLocalDisk("duptree2.macosx");
+    			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "duptree2.macosx"
+    					,"-i",""+file,"--seed",getSeed());
+    		}
+    		
     		proc = pb.start();
     		
     		BufferedReader stdInput = new BufferedReader(new 

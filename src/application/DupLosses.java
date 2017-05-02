@@ -46,6 +46,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tabdetachable.TabPaneDetacher;
 
+@SuppressWarnings("restriction")
 public class DupLosses extends GUI{
 	File constraintFile;
 	String consoleOutput, generator, maxTrees, heuristic, fileOutput;
@@ -353,7 +354,7 @@ public class DupLosses extends GUI{
 						ArrayList<Input> geneTrees = GUI.speciesTree.get(firstTree);
 							try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
 								for(int i=0; i<geneTrees.size(); i++){
-									bw.write(geneTrees.get(i).getTree()); 
+									bw.write(geneTrees.get(i).getTree()+"\n"); 
 								}
 							} catch (IOException ex) {
 								textArea.setText(ex.toString());
@@ -414,53 +415,86 @@ public class DupLosses extends GUI{
     	try {
     		Process proc = null;
     		ProcessBuilder pb = null; 
-			tempCopyToLocalDisk("lossesWin.exe");
 			
-    		if(System.getProperty("os.name").contains("Linux"))
-    			proc = Runtime.getRuntime().exec("executables/lossesLin "
-    					+ "-i " + file
-    					+ " -g " + getGeneratorNumber(getGenerator())
-//    					+ getCommand(getOutputFile(), " -o ")
-    					+ getCommand(getConstraintFile().toString(), " --constraints ")
-    					+ " --heuristic " + getHeuristicNumber(getHeuristic()) 
-    					//+ " --trees " + format(getMaxTrees())
-    					+ " --seed " + getSeed());
-    		else if(System.getProperty("os.name").contains("Windows") && this.constraintFile != null)
-    			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "lossesWin.exe"
-    					,"-i",
-    					file.toString(),
-    					"-g",
-    					getGeneratorNumber(getGenerator()),
-    					"--constraints",
-    					getConstraintFile().toString(),
-    					"--heuristic",
-    					getHeuristicNumber(getHeuristic()),
-    					//"--trees",
-    					//format(getMaxTrees()),
-    					"--seed",
-    					getSeed());
-    		else if(System.getProperty("os.name").contains("Windows") && this.constraintFile == null)
-    			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "lossesWin.exe"
-    					,"-i",
-    					file.toString(),
-    					"-g",
-    					getGeneratorNumber(getGenerator()),
-    					"--heuristic",
-    					getHeuristicNumber(getHeuristic()),
-    					//"--trees",
-    					//format(getMaxTrees()),
-    					"--seed",
-    					getSeed());
-    		else if(System.getProperty("os.name").toLowerCase().contains("mac"))
-    			proc = Runtime.getRuntime().exec("executables/lossesMac "
-    					+ "-i " + file
-    					+ " -g " + getGeneratorNumber(getGenerator())
-    					+ getCommand(getConstraintFile().toString(), " --constraints ")
-    					+ " --heuristic " + getHeuristicNumber(getHeuristic()) 
-    					+ " --trees " + format(getMaxTrees())
-    					+ " --seed " + getSeed());
-            
-    		System.out.println(pb.command());
+    		if(this.constraintFile != null) {
+    			if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+        			tempCopyToLocalDisk("lossesWin.exe");
+        			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "lossesWin.exe"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--constraints",
+        					getConstraintFile().toString(),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+        		} else if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+        			tempCopyToLocalDisk("lossesLin");
+        			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "lossesLin"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--constraints",
+        					getConstraintFile().toString(),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+        		} else if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+        			tempCopyToLocalDisk("lossesMac");
+        			pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "lossesMac"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--constraints",
+        					getConstraintFile().toString(),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+        		}
+    		} else {
+    			if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+    				tempCopyToLocalDisk("lossesWin.exe");
+    				pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "lossesWin.exe"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+    			} else if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+    				tempCopyToLocalDisk("lossesLin");
+    				pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "lossesLin"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+    			} else if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+    				tempCopyToLocalDisk("lossesMac");
+    				pb = new ProcessBuilder(System.getProperty("java.io.tmpdir") + "lossesMac"
+        					,"-i",
+        					file.toString(),
+        					"-g",
+        					getGeneratorNumber(getGenerator()),
+        					"--heuristic",
+        					getHeuristicNumber(getHeuristic()),
+        					"--seed",
+        					getSeed());
+    			}
+        		
+    		}
+    		
     		proc = pb.start();
     		
     		BufferedReader stdInput = new BufferedReader(new 
@@ -516,11 +550,6 @@ public class DupLosses extends GUI{
 		}
 	}
 	
-//	public String getInputFilename() {
-//		String[] farr = this.inputFile.toString().split("/");
-//		return farr[farr.length-1];
-//	}
-	
 	private void setConstraintFile(File constraintFile) {
 		this.constraintFile = constraintFile;
 	}
@@ -564,13 +593,6 @@ public class DupLosses extends GUI{
 		return this.fileOutput;
 	}
 	
-	private String getCommand(String str, String tag) {
-		if(str == null || str == "")
-			return "";
-		else
-			return tag + str;
-	}
-	
 	private String getHeuristicNumber(String str) {
 		if(str == null || str == "")
 			return "1";
@@ -591,16 +613,6 @@ public class DupLosses extends GUI{
 			return "0";
 		else if(str == "Random Tree")
 			return "2";
-		else
-			return "1";
-	}
-	
-	private String format(String str) {
-		if(str == null || str == "")
-			return "1";
-		
-		if(str.equals("All"))
-			return "all";
 		else
 			return "1";
 	}

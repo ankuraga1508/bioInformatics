@@ -38,7 +38,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tabdetachable.TabPaneDetacher;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
+@SuppressWarnings("restriction")
 public class StrictConsensus extends GUI{
 	String consoleOutput, objective, bound, fileOutput;
 	Tab tab = new Tab();
@@ -195,7 +198,7 @@ public class StrictConsensus extends GUI{
 						ArrayList<Input> geneTrees = GUI.speciesTree.get(firstTree);
 							try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
 								for(int i=0; i<geneTrees.size(); i++){
-									bw.write(geneTrees.get(i).getTree()); 
+									bw.write(geneTrees.get(i).getTree()+"\n"); 
 								}
 							} catch (IOException ex) {
 								ex.printStackTrace();
@@ -305,12 +308,23 @@ public class StrictConsensus extends GUI{
         			}
         		}
         	}
-
-        	System.out.println("Here is the standard error of the command (if any):\n");
+        	
+        	String errorMsg = "";
+        	boolean error = false;
         	while ((s = stdError.readLine()) != null) {
+        		errorMsg = errorMsg + s;
         		textArea.appendText(s);
         		System.out.println(s);
         		subStage.close();
+        		error = true;
+        	}
+        	
+        	if(error) {
+        		Alert alert = new Alert(AlertType.ERROR);
+    			alert.setTitle("Error Dialog");
+    			alert.setHeaderText("Error Dialog");
+    			alert.setContentText("\n" + errorMsg);
+    			alert.showAndWait();
         	}
         	
         	System.out.println(consoleOutput);
@@ -320,7 +334,7 @@ public class StrictConsensus extends GUI{
         	addInputItem(file.toString(), "Strict Consensus", refinedTrees);
         } catch (Exception ex) {
             ex.printStackTrace();
-        	textArea.appendText(ex.toString());  
+        	textArea.appendText(ex.toString());
             System.out.println(ex);
         }
     	return showOutput;

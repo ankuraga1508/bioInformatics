@@ -6,11 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-
-import org.apache.commons.codec.binary.Base64;
-
-import compareDistance.PhylogeneticTree;
-import compareDistance.TreeUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -23,8 +18,12 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.codec.binary.Base64;
+import compareDistance.PhylogeneticTree;
+import compareDistance.TreeUtils;
 import tabdetachable.TabPaneDetacher;
 
+@SuppressWarnings({ "unused", "restriction" })
 public class JSCall extends GUI{
 	static File file;
 	
@@ -53,7 +52,6 @@ public class JSCall extends GUI{
 	
 	public void compareAgainst(String algo, String firstTree) {
 		final Stage subStage = new Stage();
-		System.out.println(" HERE " + algo);
 		if(algo.equals("RFS")) {
 			GUI rfs = new GUI();
         	rfs.askParameters(subStage, true, firstTree, file);
