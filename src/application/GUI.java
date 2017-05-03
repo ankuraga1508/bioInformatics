@@ -413,7 +413,7 @@ public class GUI {
 								bw.write(geneTrees.get(i).getTree()+"\n"); 
 							}
 						} catch (IOException ex) {
-							textArea.setText(ex.toString());
+							textArea.appendText(ex.toString());
 							ex.printStackTrace();
 						}					
 						
@@ -445,7 +445,7 @@ public class GUI {
 					selectionModel.select(tab);
 					
 				} catch(Exception ex) {
-					textArea.setText(ex.toString());
+					textArea.appendText(ex.toString());
 				} finally {
 					subStage.close();
 				}
@@ -481,10 +481,10 @@ public class GUI {
 		try {
 			tree = newick.importNextTree();
 		} catch (IOException e1) {
-			textArea.setText(e1.toString());
+			textArea.appendText(e1.toString());
 			return 0;
 		} catch (ImportException e1) {
-			textArea.setText(e1.toString());
+			textArea.appendText(e1.toString());
 			return 0;
 		}
 		
@@ -596,7 +596,7 @@ public class GUI {
 				stdInput.close();
 				stdError.close();
 			} catch (IOException e) {
-				textArea.setText(e.toString());
+				textArea.appendText(e.toString());
 				e.printStackTrace();
 			}
         }
@@ -640,7 +640,7 @@ public class GUI {
         	    writer.println(output);
         	    writer.close();
         	} catch (IOException e) {
-        		textArea.setText(e.toString());
+        		textArea.appendText(e.toString());
         	}
     	}
 	}
@@ -663,13 +663,13 @@ public class GUI {
     	 	   	line = br.readLine();
     	    }
     	} catch(Exception e){
-    		textArea.setText(e.toString());
+    		textArea.appendText(e.toString());
     		e.printStackTrace();
     	} finally {
     	    try {
 				br.close();
 			} catch (IOException e) {
-				textArea.setText(e.toString());
+				textArea.appendText(e.toString());
 				e.printStackTrace();
 			}
     	}
@@ -683,11 +683,7 @@ public class GUI {
 				if(strBuilder.substring(i, i+1).equals(",") || strBuilder.substring(i, i+1).equals(")")) {
 					strBuilder = strBuilder.insert(i, ":1");
 					i = i+2;
-				} 
-//				else if(strBuilder.substring(i, i+1).equals(";") && !strBuilder.substring(i-1, i).equals(")") && !strBuilder.substring(i-1, i).equals("1")){
-//					strBuilder = strBuilder.insert(i, ":1");
-//					i = i+2;
-//				}
+				}
 			}
 		return strBuilder.toString();
     }

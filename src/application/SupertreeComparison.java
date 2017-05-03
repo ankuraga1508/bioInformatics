@@ -355,6 +355,4 @@ public class SupertreeComparison extends GUI {
 		
 		return farr[farr.length-1];
 	}
-	
-	
 }

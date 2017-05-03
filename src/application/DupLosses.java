@@ -357,7 +357,7 @@ public class DupLosses extends GUI{
 									bw.write(geneTrees.get(i).getTree()+"\n"); 
 								}
 							} catch (IOException ex) {
-								textArea.setText(ex.toString());
+								textArea.appendText(ex.toString());
 								ex.printStackTrace();
 							}
 						showOutput = runLosses(tempFile);
@@ -390,7 +390,7 @@ public class DupLosses extends GUI{
 					subStage.close();		
 					saveOutputInFile(getOutputFile());
 				} catch(Exception ex) {
-					textArea.setText(ex.toString());
+					textArea.appendText(ex.toString());
 				} finally {
 					subStage.close();
 				}	
@@ -545,7 +545,7 @@ public class DupLosses extends GUI{
 			    out.println(getFileOutput());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-				textArea.setText(e.toString());
+				textArea.appendText(e.toString());
 			}
 		}
 	}

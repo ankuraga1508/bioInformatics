@@ -274,7 +274,7 @@ public class DupTree extends GUI{
 								}
 							} catch (IOException ex) {
 								ex.printStackTrace();
-								textArea.setText(ex.toString());
+								textArea.appendText(ex.toString());
 							}
 						showOutput = runDupTree(tempFile);
 						if(compareFile != null)
@@ -306,7 +306,7 @@ public class DupTree extends GUI{
 					subStage.close();		
 					saveOutputInFile(getOutputFile());
 				} catch(Exception ex) {
-					textArea.setText(ex.toString());
+					textArea.appendText(ex.toString());
 				} finally {
 					subStage.close();
 				}
@@ -396,7 +396,7 @@ public class DupTree extends GUI{
 			    out.println(getConsoleOutput());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-				textArea.setText(e.toString());
+				textArea.appendText(e.toString());
 			}
 		}
 	}

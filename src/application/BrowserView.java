@@ -17,7 +17,7 @@ public class BrowserView extends Pane {
     String html, image64;
     final FileChooser fileChooser = new FileChooser();
     int width, height;
-    public JSCall jcall;   
+    public JSCall jcall;
     
     public WebView webView(final String s, File file) {
     	WebView browser = new WebView();

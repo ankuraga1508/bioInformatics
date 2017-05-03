@@ -232,7 +232,7 @@ public class StrictConsensus extends GUI{
 					subStage.close();		
 					saveOutputInFile(getOutputFile());
 				} catch(Exception ex) {
-					textArea.setText(ex.toString());
+					textArea.appendText(ex.toString());
 					System.out.println(ex.toString());
 				} finally {
 					subStage.close();
@@ -309,22 +309,10 @@ public class StrictConsensus extends GUI{
         		}
         	}
         	
-        	String errorMsg = "";
-        	boolean error = false;
         	while ((s = stdError.readLine()) != null) {
-        		errorMsg = errorMsg + s;
         		textArea.appendText(s);
         		System.out.println(s);
         		subStage.close();
-        		error = true;
-        	}
-        	
-        	if(error) {
-        		Alert alert = new Alert(AlertType.ERROR);
-    			alert.setTitle("Error Dialog");
-    			alert.setHeaderText("Error Dialog");
-    			alert.setContentText("\n" + errorMsg);
-    			alert.showAndWait();
         	}
         	
         	System.out.println(consoleOutput);

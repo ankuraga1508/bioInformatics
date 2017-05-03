@@ -381,3 +381,9 @@ private boolean isEqual(ArrayList<Input> list, ArrayList<Input> geneTrees) {
 	else
 		return false;
 }
+
+
+//else if(strBuilder.substring(i, i+1).equals(";") && !strBuilder.substring(i-1, i).equals(")") && !strBuilder.substring(i-1, i).equals("1")){
+//strBuilder = strBuilder.insert(i, ":1");
+//i = i+2;
+//}

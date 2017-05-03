@@ -1,1 +1,0 @@
-ERROR(main.cpp:163): gene tree 17 is not rooted binary

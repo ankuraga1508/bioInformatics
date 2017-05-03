@@ -359,7 +359,7 @@ public class DeepCoalescence extends GUI{
 									bw.write(geneTrees.get(i).getTree()+"\n");
 								}
 							} catch (IOException ex) {
-								textArea.setText(ex.toString());
+								textArea.appendText(ex.toString());
 								ex.printStackTrace();
 							}
 							System.out.println(" SS " + tempFile);
@@ -394,7 +394,7 @@ public class DeepCoalescence extends GUI{
 					subStage.close();		
 					saveOutputInFile(getOutputFile());
 				} catch(Exception ex) {
-					textArea.setText(ex.toString());
+					textArea.appendText(ex.toString());
 				} finally {
 					subStage.close();
 				}
@@ -551,7 +551,7 @@ public class DeepCoalescence extends GUI{
 			try(PrintWriter out = new PrintWriter(outputFile.toString())){
 			    out.println(getFileOutput());
 			} catch (FileNotFoundException e) {
-				textArea.setText(e.toString());
+				textArea.appendText(e.toString());
 				e.printStackTrace();
 			}
 		}
