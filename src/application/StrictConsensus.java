@@ -134,9 +134,9 @@ public class StrictConsensus extends GUI{
 		grid.add(objective, 0, 6);
 		ObservableList<String> options = 
 			    FXCollections.observableArrayList(
-			        "Gene Duplication",
-			        "Deep Coalescence",
-			        "Robinson Foulds"
+			        "GeneDuplication",
+			        "DeepCoalescence",
+			        "RobinsonFoulds"
 			    );
 		final ComboBox comboBox = new ComboBox(options);
 		comboBox.setValue("RobinsonFoulds");
