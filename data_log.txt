@@ -1,31 +1,70 @@
-command: C:\Users\ankuraga\AppData\Local\Temp\duptree2.exe -i C:\oldwindows\desktop\creativeComponent\igtp\iGTP1.1\inputData\vertebrates01.newick --seed 10
-input file: C:\oldwindows\desktop\creativeComponent\igtp\iGTP1.1\inputData\vertebrates01.newick
+command: C:\Users\moon\AppData\Local\Temp\duptree2.exe -i C:\Users\moon\Amphibians_midRoot.source_trees --seed 10
+input file: C:\Users\moon\Amphibians_midRoot.source_trees
 seed: 10
-reading gene trees: 1..9
-gene trees: 9
+reading gene trees: 1..10..12
+gene trees: 12
 gene trees rooted binary: pass
-gene tree nodes: 489 (249 taxa)
-taxa: 73
-gene tree linkage: fail
-pass
+gene tree nodes: 20492 (10252 taxa)
+taxa: 2849
+gene tree linkage: pass
 building starting tree: 0%..10%..20%..30%..40%..50%..60%..70%..80%..90%..100%
 
-elapsed time in building starting tree: species tree nodes: 145 (73 taxa)
-starting duplications: 101
-duplications: 100
-duplications: 99
-duplications: 98
-duplications: 97
-duplications: 96
-duplications: 93
-duplications: 92
-duplications: 91
-duplications: 90
-duplications: 89
-duplications: 88
-duplications: 87
-duplications: 86
-SPR analyzed: 359
-SPR applied: 13
-elapsed time in optimization search: final duplications: 86
+elapsed time in building starting tree: species tree nodes: 5697 (2849 taxa)
+starting duplications: 855
+duplications: 852
+duplications: 850
+duplications: 847
+duplications: 845
+duplications: 844
+duplications: 843
+duplications: 842
+duplications: 841
+duplications: 840
+duplications: 838
+duplications: 837
+duplications: 836
+duplications: 833
+duplications: 832
+duplications: 831
+duplications: 830
+duplications: 829
+duplications: 828
+duplications: 825
+duplications: 824
+duplications: 823
+duplications: 817
+duplications: 815
+duplications: 812
+duplications: 810
+duplications: 808
+duplications: 807
+duplications: 805
+duplications: 804
+duplications: 803
+duplications: 802
+duplications: 800
+duplications: 799
+duplications: 798
+duplications: 796
+duplications: 792
+duplications: 791
+duplications: 787
+duplications: 786
+duplications: 784
+duplications: 778
+duplications: 777
+duplications: 776
+duplications: 773
+duplications: 772
+duplications: 771
+duplications: 765
+duplications: 763
+duplications: 762
+duplications: 761
+duplications: 759
+duplications: 757
+duplications: 749
+SPR analyzed: 15608
+SPR applied: 53
+elapsed time in optimization search: final duplications: 749
 total elapsed time: 
