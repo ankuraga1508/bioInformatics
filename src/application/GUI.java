@@ -697,7 +697,7 @@ public class GUI {
     	    if(temp == ',')
     	        charCount++;
     	}
-		return charCount;
+		return charCount+1;
 	}
     
     public ObservableList<Result> getResult(){
