@@ -91,7 +91,7 @@ public class GUI {
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(8);
 
-        Text title = new Text("Supertree Methods");
+        Text title = new Text("Median Tree Methods");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         vbox.getChildren().add(title);
 
@@ -156,11 +156,6 @@ public class GUI {
                 });
             }
         }
-        
-        final Separator separator1 = new Separator();
-        vbox.getChildren().add(2, separator1);
-        final Separator separator2 = new Separator();
-        vbox.getChildren().add(7, separator2);
         
         return vbox;
     }
